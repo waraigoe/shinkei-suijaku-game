@@ -18,6 +18,11 @@ bgm.loop = true;
 // ランキング（localStorageから取得）
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
+// ページロード時にBGMを再生
+window.addEventListener('load', () => {
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+});
+
 // ボタンイベント
 document.getElementById('start-with-name-button').addEventListener('click', startWithName);
 document.getElementById('ranking-button').addEventListener('click', showRanking);
@@ -29,7 +34,6 @@ document.getElementById('show-ranking-button').addEventListener('click', showRan
 function startWithName() {
     const name = prompt('名前を入力してください:');
     playerName = name ? name : '名無しのグル兵衛';
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
     startGame();
 }
 
@@ -89,7 +93,7 @@ function checkMatch() {
     }
     flippedCards = [];
     updateScore();
-    if (miss >= 5) {
+    if (miss >= 50) { // ミスが50回に達したらゲームオーバー
         gameOver();
     }
 }
@@ -136,6 +140,7 @@ function backToTitle() {
     document.getElementById('ranking-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('title-screen').style.display = 'block';
+    bgm.play().catch(error => console.log("BGM再生エラー:", error)); // BGMを再開
 }
 
 // 配列シャッフル
