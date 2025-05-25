@@ -2,6 +2,18 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+#title-screen {
+    background-image: url('images/back.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 #board {
     display: grid;
@@ -25,7 +37,15 @@ button {
     padding: 10px 20px;
     font-size: 18px;
     margin: 10px;
+    cursor: pointer;
 }
 h1, h2 {
     color: #333;
+}
+#game-over-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
