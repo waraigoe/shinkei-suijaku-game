@@ -66,3 +66,12 @@ h1, h2 {
     align-items: center;
     min-height: 100vh;
 }
+#ranking-list {
+    width: 100%;
+    font-size: 16px;
+}
+@media (max-width: 768px) {
+    #ranking-list {
+        font-size: 14px; /* スマホでは文字サイズを小さく */
+    }
+}
