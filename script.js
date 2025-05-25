@@ -18,11 +18,6 @@ bgm.loop = true;
 // ランキング（localStorageから取得）
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
-// ページロード時にBGMを再生
-window.addEventListener('load', () => {
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
-});
-
 // ボタンイベント
 document.getElementById('start-with-name-button').addEventListener('click', startWithName);
 document.getElementById('ranking-button').addEventListener('click', showRanking);
