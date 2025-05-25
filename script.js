@@ -5,7 +5,9 @@ let cards = [...cardImages, ...cardImages];
 // ゲーム変数
 let flippedCards = [];
 let score = 0;
-let miss = 0;
+let missوپ
+
+ = 0;
 const maxMiss = 20; // ミス回数の上限
 let playerName = '名無しのグル兵衛';
 
@@ -17,6 +19,11 @@ bgm.loop = true;
 
 // ランキング（localStorageから取得）
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+
+// ページロード時にBGMを再生
+window.addEventListener('load', () => {
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+});
 
 // ボタンイベント
 document.getElementById('start-with-name-button').addEventListener('click', startWithName);
