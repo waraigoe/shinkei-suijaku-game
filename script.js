@@ -1,7 +1,6 @@
 // カードの準備（18種類の絵を2枚ずつ）
 const cardImages = Array.from({ length: 18 }, (_, i) => `images/card${i + 1}.png`);
 let cards = [...cardImages, ...cardImages]; // 合計36枚
-cards = shuffle(cards);
 
 // ゲーム変数
 let flippedCards = [];
@@ -20,16 +19,28 @@ bgm.loop = true;
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
 // ボタンイベント
-document.getElementById('start-button').addEventListener('click', startGame);
+document.getElementById('start-button').addEventListener('click', function() {
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+    startGame();
+});
 document.getElementById('ranking-button').addEventListener('click', showRanking);
 document.getElementById('name-button').addEventListener('click', setPlayerName);
 document.getElementById('back-button').addEventListener('click', backToTitle);
+document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
+document.getElementById('show-ranking-button').addEventListener('click', showRanking);
 
 // ゲーム開始
 function startGame() {
+    cards = shuffle([...cardImages, ...cardImages]); // 毎回シャッフル
+    score = 0;
+    miss = 0;
+    consecutive = 0;
+    flippedCards = [];
+    updateScore();
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
-    bgm.play();
+    document.getElementById('ranking-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
     createBoard();
 }
 
@@ -64,13 +75,13 @@ function checkMatch() {
     if (cards[card1.dataset.index] === cards[card2.dataset.index]) {
         score += 10 * Math.pow(2, consecutive); // 連続ボーナス
         consecutive++;
-        correctSound.play();
+        correctSound.play().catch(error => console.log("正解音再生エラー:", error));
     } else {
         card1.style.backgroundImage = `url('images/back.png')`;
         card2.style.backgroundImage = `url('images/back.png')`;
         miss++;
         consecutive = 0;
-        incorrectSound.play();
+        incorrectSound.play().catch(error => console.log("不正解音再生エラー:", error));
     }
     flippedCards = [];
     updateScore();
@@ -88,9 +99,9 @@ function updateScore() {
 // ゲームオーバー
 function gameOver() {
     bgm.pause();
-    alert('ゲームオーバー');
     saveRanking();
-    showRanking();
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'block';
 }
 
 // ランキング保存
@@ -105,6 +116,7 @@ function saveRanking() {
 function showRanking() {
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('ranking-screen').style.display = 'block';
     const rankingList = document.getElementById('ranking-list');
     rankingList.innerHTML = '';
@@ -118,6 +130,7 @@ function showRanking() {
 // タイトルに戻る
 function backToTitle() {
     document.getElementById('ranking-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('title-screen').style.display = 'block';
 }
 
