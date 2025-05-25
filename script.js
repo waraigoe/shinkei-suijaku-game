@@ -7,10 +7,36 @@ let flippedCards = [];
 let score = 0;
 let miss = 0;
 const maxMiss = 20; // ミス回数の上限
+let playerName = '名無しのグル兵衛';
+
+// 効果音とBGM
+const correctSound = new Audio('correct.mp3');
+const incorrectSound = new Audio('incorrect.mp3');
+const bgm = new Audio('bgm.mp3');
+bgm.loop = true;
+
+// ランキング（localStorageから取得）
+let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+
+// ページロード時にBGMを再生
+window.addEventListener('load', () => {
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+});
 
 // ボタンイベント
-document.getElementById('start-button').addEventListener('click', startGame);
+document.getElementById('start-with-name-button').addEventListener('click', startWithName);
+document.getElementById('ranking-button').addEventListener('click', showRanking);
+document.getElementById('back-button').addEventListener('click', backToTitle);
 document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
+document.getElementById('show-ranking-button').addEventListener('click', showRanking);
+
+// 名前をつけてスタート
+function startWithName() {
+    const name = prompt('名前を入力してください:');
+    playerName = name ? name : '名無しのグル兵衛';
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+    startGame();
+}
 
 // ゲーム開始
 function startGame() {
@@ -21,6 +47,7 @@ function startGame() {
     updateScore();
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
+    document.getElementById('ranking-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     createBoard();
 }
@@ -57,10 +84,12 @@ function checkMatch() {
         score += 10; // 正解で10点加算
         card1.classList.add('matched');
         card2.classList.add('matched');
+        correctSound.play().catch(error => console.log("正解音再生エラー:", error));
     } else {
         card1.style.backgroundImage = `url('back.png')`; // 不正解で裏返す
         card2.style.backgroundImage = `url('back.png')`;
         miss++;
+        incorrectSound.play().catch(error => console.log("不正解音再生エラー:", error));
     }
     flippedCards = [];
     updateScore();
@@ -77,14 +106,41 @@ function updateScore() {
 
 // ゲームオーバー
 function gameOver() {
+    bgm.pause();
+    saveRanking();
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'block';
 }
 
+// ランキング保存
+function saveRanking() {
+    ranking.push({ name: playerName, score });
+    ranking.sort((a, b) => b.score - a.score); // 降順ソート
+    ranking = ranking.slice(0, 10); // 上位10位まで
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+}
+
+// ランキング表示
+function showRanking() {
+    document.getElementById('title-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('game-over-screen').style.display = 'none';
+    document.getElementById('ranking-screen').style.display = 'block';
+    const rankingList = document.getElementById('ranking-list');
+    rankingList.innerHTML = '';
+    ranking.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${entry.name}: ${entry.score}点`;
+        rankingList.appendChild(li);
+    });
+}
+
 // タイトルに戻る
 function backToTitle() {
+    document.getElementById('ranking-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('title-screen').style.display = 'block';
+    bgm.play().catch(error => console.log("BGM再生エラー:", error)); // BGMを再開
 }
 
 // 配列シャッフル
