@@ -34,6 +34,7 @@ document.getElementById('show-ranking-button').addEventListener('click', showRan
 function startWithName() {
     const name = prompt('名前を入力してください:');
     playerName = name ? name : '名無しのグル兵衛';
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
     startGame();
 }
 
