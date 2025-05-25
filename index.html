@@ -1,77 +1,36 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
-#title-screen {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-#title-screen::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('back.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.5;
-    z-index: -1;
-}
-#board {
-    display: grid;
-    grid-template-columns: repeat(6, 100px);
-    gap: 10px;
-    margin: 20px auto;
-    width: 640px;
-}
-.card {
-    width: 100px;
-    height: 100px;
-    background-image: url('back.png');
-    background-size: cover;
-    cursor: pointer;
-}
-.matched {
-    pointer-events: none; /* クリック不可 */
-}
-#score, #miss {
-    font-size: 24px;
-    margin: 10px;
-}
-button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 10px;
-    cursor: pointer;
-}
-h1, h2 {
-    color: #333;
-}
-#game-over-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
-#ranking-list {
-    width: 100%;
-    font-size: 16px;
-}
-@media (max-width: 768px) {
-    #ranking-list {
-        font-size: 14px; /* スマホでは文字サイズを小さく */
-    }
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>激ムズ !!グルカタ神経衰弱</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- タイトル画面 -->
+    <div id="title-screen">
+        <h1>激ムズ !!グルカタ神経衰弱</h1>
+        <button id="start-with-name-button">名前をつけてスタート</button>
+        <button id="ranking-button">ランキングを見る</button>
+    </div>
+    <!-- ゲーム画面 -->
+    <div id="game-screen" style="display: none;">
+        <div id="score">得点: 0</div>
+        <div id="miss">ミス: 0</div>
+        <div id="board"></div>
+    </div>
+    <!-- ランキング画面 -->
+    <div id="ranking-screen" style="display: none;">
+        <h2>ランキング</h2>
+        <ol id="ranking-list"></ol>
+        <button id="back-button">戻る</button>
+    </div>
+    <!-- ゲームオーバー画面 -->
+    <div id="game-over-screen" style="display: none;">
+        <h2>ゲームオーバー</h2>
+        <button id="back-to-title-button">スタートに戻る</button>
+        <button id="show-ranking-button">ランキングを見る</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
