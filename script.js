@@ -1,5 +1,5 @@
 // カードの準備（18種類の絵を2枚ずつ）
-const cardImages = Array.from({ length: 18 }, (_, i) => `images/card${i + 1}.png`);
+const cardImages = Array.from({ length: 18 }, (_, i) => `card${i + 1}.png`);
 let cards = [...cardImages, ...cardImages]; // 合計36枚
 
 // ゲーム変数
@@ -10,24 +10,28 @@ let consecutive = 0;
 let playerName = '名無しのグル兵衛';
 
 // 効果音とBGM
-const correctSound = new Audio('sounds/correct.mp3');
-const incorrectSound = new Audio('sounds/incorrect.mp3');
-const bgm = new Audio('sounds/bgm.mp3');
+const correctSound = new Audio('correct.mp3');
+const incorrectSound = new Audio('incorrect.mp3');
+const bgm = new Audio('bgm.mp3');
 bgm.loop = true;
 
 // ランキング（localStorageから取得）
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
 // ボタンイベント
-document.getElementById('start-button').addEventListener('click', function() {
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
-    startGame();
-});
+document.getElementById('start-with-name-button').addEventListener('click', startWithName);
 document.getElementById('ranking-button').addEventListener('click', showRanking);
-document.getElementById('name-button').addEventListener('click', setPlayerName);
 document.getElementById('back-button').addEventListener('click', backToTitle);
 document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
 document.getElementById('show-ranking-button').addEventListener('click', showRanking);
+
+// 名前をつけてスタート
+function startWithName() {
+    const name = prompt('名前を入力してください:');
+    playerName = name ? name : '名無しのグル兵衛';
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+    startGame();
+}
 
 // ゲーム開始
 function startGame() {
@@ -77,8 +81,8 @@ function checkMatch() {
         consecutive++;
         correctSound.play().catch(error => console.log("正解音再生エラー:", error));
     } else {
-        card1.style.backgroundImage = `url('images/back.png')`;
-        card2.style.backgroundImage = `url('images/back.png')`;
+        card1.style.backgroundImage = `url('back.png')`;
+        card2.style.backgroundImage = `url('back.png')`;
         miss++;
         consecutive = 0;
         incorrectSound.play().catch(error => console.log("不正解音再生エラー:", error));
@@ -132,14 +136,6 @@ function backToTitle() {
     document.getElementById('ranking-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('title-screen').style.display = 'block';
-}
-
-// プレイヤー名設定
-function setPlayerName() {
-    const name = prompt('名前を入力してください:');
-    if (name) {
-        playerName = name;
-    }
 }
 
 // 配列シャッフル
