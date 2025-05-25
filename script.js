@@ -1,0 +1,139 @@
+// カードの準備（18種類の絵を2枚ずつ）
+const cardImages = Array.from({ length: 18 }, (_, i) => `images/card${i + 1}.png`);
+let cards = [...cardImages, ...cardImages]; // 合計36枚
+cards = shuffle(cards);
+
+// ゲーム変数
+let flippedCards = [];
+let score = 0;
+let miss = 0;
+let consecutive = 0;
+let playerName = '名無しのグル兵衛';
+
+// 効果音とBGM
+const correctSound = new Audio('sounds/correct.mp3');
+const incorrectSound = new Audio('sounds/incorrect.mp3');
+const bgm = new Audio('sounds/bgm.mp3');
+bgm.loop = true;
+
+// ランキング（localStorageから取得）
+let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+
+// ボタンイベント
+document.getElementById('start-button').addEventListener('click', startGame);
+document.getElementById('ranking-button').addEventListener('click', showRanking);
+document.getElementById('name-button').addEventListener('click', setPlayerName);
+document.getElementById('back-button').addEventListener('click', backToTitle);
+
+// ゲーム開始
+function startGame() {
+    document.getElementById('title-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+    bgm.play();
+    createBoard();
+}
+
+// ボード作成
+function createBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    cards.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.dataset.index = index;
+        cardElement.addEventListener('click', flipCard);
+        board.appendChild(cardElement);
+    });
+}
+
+// カードをめくる
+function flipCard() {
+    if (flippedCards.length < 2) {
+        const index = this.dataset.index;
+        this.style.backgroundImage = `url('${cards[index]}')`;
+        flippedCards.push(this);
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 1000); // 1秒後に判定
+        }
+    }
+}
+
+// ペア判定
+function checkMatch() {
+    const [card1, card2] = flippedCards;
+    if (cards[card1.dataset.index] === cards[card2.dataset.index]) {
+        score += 10 * Math.pow(2, consecutive); // 連続ボーナス
+        consecutive++;
+        correctSound.play();
+    } else {
+        card1.style.backgroundImage = `url('images/back.png')`;
+        card2.style.backgroundImage = `url('images/back.png')`;
+        miss++;
+        consecutive = 0;
+        incorrectSound.play();
+    }
+    flippedCards = [];
+    updateScore();
+    if (miss >= 5) {
+        gameOver();
+    }
+}
+
+// 得点とミスの更新
+function updateScore() {
+    document.getElementById('score').textContent = `得点: ${score}`;
+    document.getElementById('miss').textContent = `ミス: ${miss}`;
+}
+
+// ゲームオーバー
+function gameOver() {
+    bgm.pause();
+    alert('ゲームオーバー');
+    saveRanking();
+    showRanking();
+}
+
+// ランキング保存
+function saveRanking() {
+    ranking.push({ name: playerName, score });
+    ranking.sort((a, b) => b.score - a.score); // 降順ソート
+    ranking = ranking.slice(0, 10); // 上位10位まで
+    localStorage.setItem('ranking', JSON.stringify(ranking));
+}
+
+// ランキング表示
+function showRanking() {
+    document.getElementById('title-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('ranking-screen').style.display = 'block';
+    const rankingList = document.getElementById('ranking-list');
+    rankingList.innerHTML = '';
+    ranking.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${index + 1}. ${entry.name}: ${entry.score}点`;
+        rankingList.appendChild(li);
+    });
+}
+
+// タイトルに戻る
+function backToTitle() {
+    document.getElementById('ranking-screen').style.display = 'none';
+    document.getElementById('title-screen').style.display = 'block';
+}
+
+// プレイヤー名設定
+function setPlayerName() {
+    const name = prompt('名前を入力してください:');
+    if (name) {
+        playerName = name;
+    }
+}
+
+// 配列シャッフル
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}

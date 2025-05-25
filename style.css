@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+#board {
+    display: grid;
+    grid-template-columns: repeat(6, 100px);
+    gap: 10px;
+    margin: 20px auto;
+    width: 640px;
+}
+.card {
+    width: 100px;
+    height: 100px;
+    background-image: url('images/back.png');
+    background-size: cover;
+    cursor: pointer;
+}
+#score, #miss {
+    font-size: 24px;
+    margin: 10px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin: 10px;
+}
+h1, h2 {
+    color: #333;
+}
