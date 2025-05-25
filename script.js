@@ -7,7 +7,6 @@ let flippedCards = [];
 let score = 0;
 let miss = 0;
 const maxMiss = 20; // ミス回数の上限
-let playerName = '名無しのグル兵衛';
 
 // 効果音とBGM
 const correctSound = new Audio('correct.mp3');
@@ -15,8 +14,8 @@ const incorrectSound = new Audio('incorrect.mp3');
 const bgm = new Audio('bgm.mp3');
 bgm.loop = true;
 
-// ランキング（localStorageから取得）
-let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
+// ハイスコア（localStorageから取得）
+let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
 
 // ページロード時にBGMを再生
 window.addEventListener('load', () => {
@@ -24,19 +23,11 @@ window.addEventListener('load', () => {
 });
 
 // ボタンイベント
-document.getElementById('start-with-name-button').addEventListener('click', startWithName);
-document.getElementById('ranking-button').addEventListener('click', showRanking);
+document.getElementById('start-button').addEventListener('click', startGame);
+document.getElementById('highscore-button').addEventListener('click', showHighscore);
 document.getElementById('back-button').addEventListener('click', backToTitle);
 document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
-document.getElementById('show-ranking-button').addEventListener('click', showRanking);
-
-// 名前をつけてスタート
-function startWithName() {
-    const name = prompt('名前を入力してください:');
-    playerName = name ? name : '名無しのグル兵衛';
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
-    startGame();
-}
+document.getElementById('show-highscore-button').addEventListener('click', showHighscore);
 
 // ゲーム開始
 function startGame() {
@@ -47,7 +38,7 @@ function startGame() {
     updateScore();
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
-    document.getElementById('ranking-screen').style.display = 'none';
+    document.getElementById('highscore-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     createBoard();
 }
@@ -107,37 +98,37 @@ function updateScore() {
 // ゲームオーバー
 function gameOver() {
     bgm.pause();
-    saveRanking();
+    saveHighscore();
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'block';
 }
 
-// ランキング保存
-function saveRanking() {
-    ranking.push({ name: playerName, score });
-    ranking.sort((a, b) => b.score - a.score); // 降順ソート
-    ranking = ranking.slice(0, 10); // 上位10位まで
-    localStorage.setItem('ranking', JSON.stringify(ranking));
+// ハイスコア保存
+function saveHighscore() {
+    highscores.push(score);
+    highscores.sort((a, b) => b - a); // 降順ソート
+    highscores = highscores.slice(0, 10); // 上位10位まで
+    localStorage.setItem('highscores', JSON.stringify(highscores));
 }
 
-// ランキング表示
-function showRanking() {
+// ハイスコア表示
+function showHighscore() {
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
-    document.getElementById('ranking-screen').style.display = 'block';
-    const rankingList = document.getElementById('ranking-list');
-    rankingList.innerHTML = '';
-    ranking.forEach((entry, index) => {
+    document.getElementById('highscore-screen').style.display = 'block';
+    const highscoreList = document.getElementById('highscore-list');
+    highscoreList.innerHTML = '';
+    highscores.forEach((entry, index) => {
         const li = document.createElement('li');
-        li.textContent = `${index + 1}. ${entry.name}: ${entry.score}点`;
-        rankingList.appendChild(li);
+        li.textContent = `${index + 1}. ${entry}点`;
+        highscoreList.appendChild(li);
     });
 }
 
 // タイトルに戻る
 function backToTitle() {
-    document.getElementById('ranking-screen').style.display = 'none';
+    document.getElementById('highscore-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('title-screen').style.display = 'block';
     bgm.play().catch(error => console.log("BGM再生エラー:", error)); // BGMを再開
