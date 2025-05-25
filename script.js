@@ -5,9 +5,7 @@ let cards = [...cardImages, ...cardImages];
 // ゲーム変数
 let flippedCards = [];
 let score = 0;
-let missوپ
-
- = 0;
+let miss = 0;
 const maxMiss = 20; // ミス回数の上限
 let playerName = '名無しのグル兵衛';
 
