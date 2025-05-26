@@ -12,7 +12,8 @@ body {
     align-items: center;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    background-size: cover; /* 背景画像を画面全体にフィットさせる */
+    background-size: cover; /* 背景画像を画面全体にフィット */
+    background-position: center;
 }
 #board {
     display: grid;
