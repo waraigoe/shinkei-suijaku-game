@@ -11,12 +11,25 @@
     <div id="title-screen">
         <h1>激ムズ !!グルカタ神経衰弱</h1>
         <button id="start-button">スタート</button>
+        <button id="highscore-button">ハイスコアを見る</button>
     </div>
     <!-- ゲーム画面 -->
     <div id="game-screen" style="display: none;">
         <div id="score">得点: 0</div>
         <div id="miss">ミス: 0</div>
         <div id="board"></div>
+    </div>
+    <!-- ハイスコア画面 -->
+    <div id="highscore-screen" style="display: none;">
+        <h2>ハイスコア</h2>
+        <ol id="highscore-list"></ol>
+        <button id="back-button">戻る</button>
+    </div>
+    <!-- ゲームオーバー画面 -->
+    <div id="game-over-screen" style="display: none;">
+        <h2>ゲームオーバー</h2>
+        <button id="back-to-title-button">スタートに戻る</button>
+        <button id="show-highscore-button">ハイスコアを見る</button>
     </div>
     <script src="script.js"></script>
 </body>
