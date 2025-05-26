@@ -5,17 +5,16 @@ const allCardImages = Array.from({ length: 18 }, (_, i) => `card${i + 1}.png`);
 const randomImage = allCardImages[Math.floor(Math.random() * allCardImages.length)];
 document.getElementById('title-screen').style.backgroundImage = `url('${randomImage}')`;
 
-// BGM設定（タイトル画面で即再生）
+// BGM設定
 const bgm = new Audio('bgm.mp3');
 bgm.loop = true;
-document.addEventListener('DOMContentLoaded', () => {
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
-});
 
-// ランダムに15枚を選択し、30枚のカードを生成
-const selectedImages = shuffle(allCardImages).slice(0, 15);
-let cards = [...selectedImages, ...selectedImages]; // ペアを作成
-cards = shuffle(cards); // シャッフル
+// 効果音設定
+const correctSound = new Audio('correct.mp3');
+const incorrectSound = new Audio('incorrect.mp3');
+
+// ランキング（localStorageから取得）
+let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
 // ゲーム変数
 let flippedCards = [];
@@ -23,22 +22,23 @@ let score = 0;
 let miss = 0;
 const maxMiss = 20;
 
-// 効果音
-const correctSound = new Audio('correct.mp3');
-const incorrectSound = new Audio('incorrect.mp3');
-
-// ハイスコア
-let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
-
 // ボタンイベント
-document.getElementById('start-button').addEventListener('click', startGame);
-document.getElementById('highscore-button').addEventListener('click', showHighscore);
+document.getElementById('start-button').addEventListener('click', () => {
+    bgm.play().catch(error => console.log("BGM再生エラー:", error));
+    startGame();
+});
+document.getElementById('highscore-button').addEventListener('click', showRanking);
 document.getElementById('back-button').addEventListener('click', backToTitle);
 document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
-document.getElementById('show-highscore-button').addEventListener('click', showHighscore);
+document.getElementById('show-highscore-button').addEventListener('click', showRanking);
 
 // ゲーム開始
 function startGame() {
+    cards = shuffle([...allCardImages.slice(0, 15), ...allCardImages.slice(0, 15)]);
+    score = 0;
+    miss = 0;
+    flippedCards = [];
+    updateScore();
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
     createBoard();
@@ -99,30 +99,30 @@ function updateScore() {
 // ゲームオーバー
 function gameOver() {
     bgm.pause();
-    saveHighscore();
+    saveRanking();
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'block';
 }
 
-// ハイスコア保存
-function saveHighscore() {
-    highscores.push(score);
-    highscores.sort((a, b) => b - a);
-    highscores = highscores.slice(0, 10);
-    localStorage.setItem('highscores', JSON.stringify(highscores));
+// ランキング保存
+function saveRanking() {
+    ranking.push({ name: "Player", score }); // 名前は一律"Player"に
+    ranking.sort((a, b) => b.score - a.score);
+    ranking = ranking.slice(0, 10);
+    localStorage.setItem('ranking', JSON.stringify(ranking));
 }
 
-// ハイスコア表示
-function showHighscore() {
+// ランキング表示
+function showRanking() {
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('game-over-screen').style.display = 'none';
     document.getElementById('highscore-screen').style.display = 'block';
     const highscoreList = document.getElementById('highscore-list');
     highscoreList.innerHTML = '';
-    highscores.forEach((entry, index) => {
+    ranking.forEach((entry, index) => {
         const li = document.createElement('li');
-        li.textContent = `${index + 1}. ${entry}点`;
+        li.textContent = `${index + 1}. ${entry.name}: ${entry.score}点`;
         highscoreList.appendChild(li);
     });
 }
