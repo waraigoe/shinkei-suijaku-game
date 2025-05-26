@@ -4,24 +4,22 @@ body {
     background-color: #f0f0f0;
     margin: 0;
     padding: 0;
-    height: 100vh; /* 画面全体の高さを確保 */
-    overflow: hidden; /* 不要なスクロールを防ぐ */
+    height: 100vh;
+    overflow: hidden;
 }
 
 #title-screen {
-    position: relative;
-    min-height: 100vh; /* 画面全体を使用 */
+    min-height: 100vh;
     display: flex;
-    justify-content: center; /* 水平中央 */
-    align-items: center; /* 垂直中央 */
-    background-size: 30%; /* 背景画像を小さく設定 */
+    justify-content: center;
+    align-items: center;
+    background-size: 30%;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .title-content {
-    z-index: 1; /* 前面に配置 */
-    background: rgba(0, 0, 0, 0.5); /* 半透明背景で視認性向上 */
+    background: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
@@ -29,14 +27,14 @@ body {
 
 #title-screen h1 {
     color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* タイトルを見やすく */
-    font-size: 2.5em; /* 適切なサイズ */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    font-size: 2.5em;
     margin: 0;
 }
 
 #title-screen button {
     padding: 10px 20px;
-    font-size: 18px; /* ボタンのサイズを適切に */
+    font-size: 18px;
     margin: 10px;
     cursor: pointer;
     background-color: #4CAF50;
@@ -49,16 +47,23 @@ body {
     background-color: #45a049;
 }
 
-/* レスポンシブデザイン（スマホ対応） */
-@media (max-width: 768px) {
-    #title-screen {
-        background-size: 50%; /* スマホでは少し大きく */
-    }
-    #title-screen h1 {
-        font-size: 1.8em; /* スマホで小さく調整 */
-    }
-    #title-screen button {
-        font-size: 16px; /* スマホでボタンサイズ調整 */
-        padding: 8px 16px;
-    }
+#board {
+    display: grid;
+    grid-template-columns: repeat(6, 100px); /* 横6列 */
+    grid-template-rows: repeat(5, 100px); /* 縦5行 */
+    gap: 10px;
+    margin: 20px auto;
+    width: 640px;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-image: url('back.png');
+    background-size: cover;
+    cursor: pointer;
+}
+
+.matched {
+    pointer-events: none;
 }
