@@ -1,6 +1,10 @@
 // 画像の準備（18種類の絵）
 const allCardImages = Array.from({ length: 18 }, (_, i) => `card${i + 1}.png`);
 
+// スタート画面の背景画像をランダムに選択
+const randomImage = allCardImages[Math.floor(Math.random() * allCardImages.length)];
+document.getElementById('title-screen').style.backgroundImage = `url('${randomImage}')`;
+
 // ランダムに15枚を選択
 const selectedImages = shuffle(allCardImages).slice(0, 15);
 let cards = [...selectedImages, ...selectedImages]; // ペアを作成
