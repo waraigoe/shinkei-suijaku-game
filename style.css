@@ -49,8 +49,8 @@ body {
 
 #board {
     display: grid;
-    grid-template-columns: repeat(6, 100px); /* 横6列 */
-    grid-template-rows: repeat(5, 100px); /* 縦5行 */
+    grid-template-columns: repeat(6, 100px);
+    grid-template-rows: repeat(5, 100px);
     gap: 10px;
     margin: 20px auto;
     width: 640px;
