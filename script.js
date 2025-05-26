@@ -1,6 +1,10 @@
-// カードの準備（18種類の絵を2枚ずつ、合計36枚）
-const cardImages = Array.from({ length: 18 }, (_, i) => `card${i + 1}.png`);
-let cards = [...cardImages, ...cardImages];
+// 画像の準備（18種類の絵）
+const allCardImages = Array.from({ length: 18 }, (_, i) => `card${i + 1}.png`);
+
+// ランダムに15枚を選択
+const selectedImages = shuffle(allCardImages).slice(0, 15);
+let cards = [...selectedImages, ...selectedImages]; // ペアを作成
+cards = shuffle(cards); // シャッフル
 
 // ゲーム変数
 let flippedCards = [];
@@ -14,32 +18,19 @@ const incorrectSound = new Audio('incorrect.mp3');
 const bgm = new Audio('bgm.mp3');
 bgm.loop = true;
 
-// ハイスコア（localStorageから取得）
-let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
-
-// ページロード時にBGMを再生
-window.addEventListener('load', () => {
-    bgm.play().catch(error => console.log("BGM再生エラー:", error));
-});
-
 // ボタンイベント
 document.getElementById('start-button').addEventListener('click', startGame);
-document.getElementById('highscore-button').addEventListener('click', showHighscore);
-document.getElementById('back-button').addEventListener('click', backToTitle);
-document.getElementById('back-to-title-button').addEventListener('click', backToTitle);
-document.getElementById('show-highscore-button').addEventListener('click', showHighscore);
 
 // ゲーム開始
 function startGame() {
-    cards = shuffle([...cardImages, ...cardImages]); // シャッフル
+    bgm.play().catch(error => console.log("BGM再生エラー:", error)); // スタート時にBGM再生
+    cards = shuffle([...selectedImages, ...selectedImages]); // ペアをシャッフル
     score = 0;
     miss = 0;
     flippedCards = [];
     updateScore();
     document.getElementById('title-screen').style.display = 'none';
     document.getElementById('game-screen').style.display = 'block';
-    document.getElementById('highscore-screen').style.display = 'none';
-    document.getElementById('game-over-screen').style.display = 'none';
     createBoard();
 }
 
@@ -98,40 +89,9 @@ function updateScore() {
 // ゲームオーバー
 function gameOver() {
     bgm.pause();
-    saveHighscore();
     document.getElementById('game-screen').style.display = 'none';
-    document.getElementById('game-over-screen').style.display = 'block';
-}
-
-// ハイスコア保存
-function saveHighscore() {
-    highscores.push(score);
-    highscores.sort((a, b) => b - a); // 降順ソート
-    highscores = highscores.slice(0, 10); // 上位10位まで
-    localStorage.setItem('highscores', JSON.stringify(highscores));
-}
-
-// ハイスコア表示
-function showHighscore() {
-    document.getElementById('title-screen').style.display = 'none';
-    document.getElementById('game-screen').style.display = 'none';
-    document.getElementById('game-over-screen').style.display = 'none';
-    document.getElementById('highscore-screen').style.display = 'block';
-    const highscoreList = document.getElementById('highscore-list');
-    highscoreList.innerHTML = '';
-    highscores.forEach((entry, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${index + 1}. ${entry}点`;
-        highscoreList.appendChild(li);
-    });
-}
-
-// タイトルに戻る
-function backToTitle() {
-    document.getElementById('highscore-screen').style.display = 'none';
-    document.getElementById('game-over-screen').style.display = 'none';
+    alert('ゲームオーバー');
     document.getElementById('title-screen').style.display = 'block';
-    bgm.play().catch(error => console.log("BGM再生エラー:", error)); // BGMを再開
 }
 
 // 配列シャッフル
