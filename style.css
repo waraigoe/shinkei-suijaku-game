@@ -2,7 +2,10 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
 }
+
 #title-screen {
     position: relative;
     min-height: 100vh;
@@ -10,19 +13,33 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-size: 50%; /* 画像サイズを50%に縮小してタイトルを確保 */
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+}
+
+#title-screen h1 {
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    background-size: cover; /* 背景画像を画面全体にフィット */
-    background-position: center;
+    z-index: 1; /* タイトルを画像より前面に */
+    background: rgba(0, 0, 0, 0.5); /* 背景を半透明にして視認性向上 */
+    padding: 10px;
+    border-radius: 5px;
 }
+
+#title-screen button {
+    z-index: 1; /* ボタンも前面に */
+}
+
 #board {
     display: grid;
-    grid-template-columns: repeat(6, 100px); /* 横6列 */
-    grid-template-rows: repeat(5, 100px); /* 縦5行 */
+    grid-template-columns: repeat(6, 100px);
     gap: 10px;
     margin: 20px auto;
     width: 640px;
 }
+
 .card {
     width: 100px;
     height: 100px;
@@ -30,19 +47,42 @@ body {
     background-size: cover;
     cursor: pointer;
 }
+
 .matched {
-    pointer-events: none; /* クリック不可 */
+    pointer-events: none;
 }
+
 #score, #miss {
     font-size: 24px;
     margin: 10px;
 }
+
 button {
     padding: 10px 20px;
     font-size: 18px;
     margin: 10px;
     cursor: pointer;
 }
+
 h1, h2 {
     color: #333;
+}
+
+#game-over-screen, #highscore-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#highscore-list {
+    width: 100%;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    #highscore-list {
+        font-size: 14px;
+    }
 }
