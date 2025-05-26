@@ -3,6 +3,17 @@ body {
     text-align: center;
     background-color: #f0f0f0;
 }
+#title-screen {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    background-size: cover; /* 背景画像を画面全体にフィットさせる */
+}
 #board {
     display: grid;
     grid-template-columns: repeat(6, 100px); /* 横6列 */
